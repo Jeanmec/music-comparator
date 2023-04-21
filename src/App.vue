@@ -6,23 +6,44 @@
     </nav>
   </header>
 
-  <div id="chart">
-    <apexchart height="350" width="50%" :options="chartOptions" :series="series"></apexchart>
+  <SearchBar @searchResult="toogleShowSearchResult" />
+
+  Select your : type
+  <div v-if="searchResult" class="flex flex-wrap justify-center gap-2 my-3 mx-20">
+    <div v-for="(result, index) in searchResult" :key="result">
+      <span
+        class="text-xs inline-flex items-center font-bold leading-sm px-3 py-1 rounded-full bg-white text-gray-700 border cursor-pointer gap-3"
+      >
+        <img :src="result.pic" class="w-10 h-10 rounded-full" /> {{ result.name }}</span
+      >
+    </div>
   </div>
-  <TheMostPopularTrackOfAArtist />
+
+  <div class="grid grid-cols-2">
+    <div id="chart">
+      <apexchart height="350" :options="chartOptions" :series="series"></apexchart>
+    </div>
+    <TheMostPopularTrackOfAArtist />
+  </div>
+  <TheFooter />
 </template>
 
 <script lang="ts">
 import { PlusCircleOutline } from 'mdue'
 import TheMostPopularTrackOfAArtist from './components/TheMostPopularTrackOfAArtist.vue'
+import SearchBar from './components/SearchBar.vue'
+import TheFooter from './components/TheFooter.vue'
 
 export default {
   components: {
     PlusCircleOutline,
-    TheMostPopularTrackOfAArtist
+    TheMostPopularTrackOfAArtist,
+    TheFooter,
+    SearchBar
   },
   data: function () {
     return {
+      searchResult: [],
       chart: {
         type: 'area'
       },
@@ -52,6 +73,9 @@ export default {
           type: 'area',
           zoom: {
             enabled: false
+          },
+          toolbar: {
+            show: false
           }
         },
         dataLabels: {
@@ -69,6 +93,12 @@ export default {
           categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
         }
       }
+    }
+  },
+  methods: {
+    toogleShowSearchResult(elements) {
+      console.log(elements)
+      this.searchResult = elements
     }
   }
 }
