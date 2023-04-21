@@ -1,49 +1,46 @@
 <template>
   <header>
     <nav>
-      <RouterLink to="/">Home <PlusCircleOutline /></RouterLink>
+      <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/about">About</RouterLink>
     </nav>
   </header>
 
-  <SearchBar @searchResult="toogleShowSearchResult" />
+  <div class="container">
+    <SearchBar @searchResult="toogleShowSearchResult" />
 
-  Select your : type
-  <div v-if="searchResult" class="flex flex-wrap justify-center gap-2 my-3 mx-20">
-    <div v-for="(result, index) in searchResult" :key="result">
-      <span
-        class="text-xs inline-flex items-center font-bold leading-sm px-3 py-1 rounded-full bg-white text-gray-700 border cursor-pointer gap-3"
-      >
-        <img :src="result.pic" class="w-10 h-10 rounded-full" /> {{ result.name }}</span
-      >
-    </div>
-  </div>
+    <TheVersusSelection :searchedArtists="searchResult" @selectedArtist="toogleArtistSelection" />
+    <TheVersusForm :searchedArtists="selectedArtist" />
 
-  <div class="grid grid-cols-2">
-    <div id="chart">
-      <apexchart height="350" :options="chartOptions" :series="series"></apexchart>
+    <div class="grid grid-cols-2">
+      <div id="chart">
+        <apexchart height="350" :options="chartOptions" :series="series"></apexchart>
+      </div>
+      <TheMostPopularTrackOfAArtist />
     </div>
-    <TheMostPopularTrackOfAArtist />
   </div>
   <TheFooter />
 </template>
 
 <script lang="ts">
-import { PlusCircleOutline } from 'mdue'
 import TheMostPopularTrackOfAArtist from './components/TheMostPopularTrackOfAArtist.vue'
+import TheVersusSelection from './components/TheVersusSelection.vue'
+import TheVersusForm from './components/TheVersusForm.vue'
 import SearchBar from './components/SearchBar.vue'
 import TheFooter from './components/TheFooter.vue'
 
 export default {
   components: {
-    PlusCircleOutline,
     TheMostPopularTrackOfAArtist,
+    TheVersusSelection,
+    TheVersusForm,
     TheFooter,
     SearchBar
   },
   data: function () {
     return {
       searchResult: [],
+      selectedArtist: [],
       chart: {
         type: 'area'
       },
@@ -99,6 +96,10 @@ export default {
     toogleShowSearchResult(elements) {
       console.log(elements)
       this.searchResult = elements
+    },
+    toogleArtistSelection(elements) {
+      console.log(elements)
+      this.selectedArtist.push(elements)
     }
   }
 }
@@ -112,5 +113,8 @@ header {
     align-self: center;
     column-gap: 15px;
   }
+}
+.container {
+  width: 80%;
 }
 </style>
