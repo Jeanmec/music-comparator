@@ -1,7 +1,8 @@
 <template>
   <div>
-    salut
-    {{ searchedArtists }}
+    <slot name="presentation"></slot>
+    <slot name="number-albums"></slot>
+    <slot name="albums-preview"></slot>
   </div>
 </template>
 

@@ -1,12 +1,14 @@
 <template>
   <div>
-    <h1>Top 5 des chansons d'Eminem sur Deezer</h1>
     <ul class="flex flex-col gap-4">
       <li v-for="(track, index) in tracks" :key="index">
         <div class="flex items-center" :id="index">
           <span class="text-xl font-bold mx-6">#{{ index + 1 }}</span>
           <div class="flex flex-col gap-y-2">
-            <div class="flex gap-x-2 cursor-pointer track" @click="toogleVisibility(index)">
+            <div
+              class="flex gap-x-2 cursor-pointer flex-wrap track"
+              @click="toogleVisibility(index)"
+            >
               <span
                 v-show="track.explicit_content_lyrics && trackInfoVisibility[index]"
                 class="animation-appear text-xs inline-flex items-center font-bold leading-sm uppercase px-3 py-1 bg-red-200 text-red-700 rounded-full"
@@ -40,11 +42,11 @@
 </template>
 
 <script>
-import axios from 'axios'
 import { ClockTimeEightOutline, Eye, EyeOff } from 'mdue'
 
 export default {
   components: { ClockTimeEightOutline, Eye, EyeOff },
+  props: ['artistTopTracks'],
   data() {
     return {
       tracks: [],
@@ -52,17 +54,15 @@ export default {
       trackInfoVisibility: []
     }
   },
-  mounted() {
-    this.getTopTracks()
+  watch: {
+    artistTopTracks: {
+      immediate: true,
+      handler(newVal, oldVal) {
+        this.tracks = newVal
+      }
+    }
   },
   methods: {
-    async getTopTracks() {
-      const res = await axios.get('https://api.deezer.com/artist/14/top?limit=5')
-      this.tracks = res.data.data
-      this.tracks.forEach((track) => {
-        this.trackInfoVisibility
-      })
-    },
     toogleVisibility(index) {
       this.trackInfoVisibility[index] = !this.trackInfoVisibility[index]
     }

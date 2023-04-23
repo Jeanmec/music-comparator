@@ -1,107 +1,22 @@
 <template>
-  <header>
+  <header
+    class="rounded-br-full rounded-bl-full flex h-12 justify-center items-center bg-emerald-200 border-b-4 border-r-4 border-l-4 border-emerald-500 gap-x-40 w-6/12"
+  >
     <nav>
       <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/about">About</RouterLink>
+      <RouterLink to="/artist/13">Discover artist</RouterLink>
     </nav>
   </header>
 
-  <div class="container">
-    <SearchBar @searchResult="toogleShowSearchResult" />
+  <RouterView />
 
-    <TheVersusSelection :searchedArtists="searchResult" @selectedArtist="toogleArtistSelection" />
-    <TheVersusForm :searchedArtists="selectedArtist" />
-
-    <div class="grid grid-cols-2">
-      <div id="chart">
-        <apexchart height="350" :options="chartOptions" :series="series"></apexchart>
-      </div>
-      <TheMostPopularTrackOfAArtist />
-    </div>
-  </div>
   <TheFooter />
 </template>
 
 <script lang="ts">
-import TheMostPopularTrackOfAArtist from './components/TheMostPopularTrackOfAArtist.vue'
-import TheVersusSelection from './components/TheVersusSelection.vue'
-import TheVersusForm from './components/TheVersusForm.vue'
-import SearchBar from './components/SearchBar.vue'
 import TheFooter from './components/TheFooter.vue'
-
 export default {
-  components: {
-    TheMostPopularTrackOfAArtist,
-    TheVersusSelection,
-    TheVersusForm,
-    TheFooter,
-    SearchBar
-  },
-  data: function () {
-    return {
-      searchResult: [],
-      selectedArtist: [],
-      chart: {
-        type: 'area'
-      },
-      stroke: {
-        show: true,
-        width: 4,
-        colors: ['#2f4cdd', '#b519ec']
-      },
-      series: [
-        {
-          name: 'series1',
-          data: [31, 40, 28, 51, 42, 109, 100]
-        },
-        {
-          name: 'series2',
-          data: [11, 32, 45, 32, 34, 52, 41]
-        },
-        {
-          name: 'series3',
-          data: [15, 32, 48, 3, 14, 32, 71]
-        }
-      ],
-      chartOptions: {
-        colors: ['#9DF3C4', '#62D2A2', '#1FAB89'],
-        chart: {
-          height: 350,
-          type: 'area',
-          zoom: {
-            enabled: false
-          },
-          toolbar: {
-            show: false
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          curve: 'smooth'
-        },
-        title: {
-          text: '',
-          align: 'left'
-        },
-
-        xaxis: {
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
-        }
-      }
-    }
-  },
-  methods: {
-    toogleShowSearchResult(elements) {
-      console.log(elements)
-      this.searchResult = elements
-    },
-    toogleArtistSelection(elements) {
-      console.log(elements)
-      this.selectedArtist.push(elements)
-    }
-  }
+  components: { TheFooter }
 }
 </script>
 
