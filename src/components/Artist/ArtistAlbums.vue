@@ -27,8 +27,18 @@ export default {
     <button
       type="button"
       class="mt-10 mx-auto w-max text-white bg-green-700 hover:bg-green-800 focus:outline-none font-medium rounded-full text-sm px-5 py-2.5 text-center"
+      @click="$emit('fetch-more-albums-event')"
+      :disabled="artist.albums.length == artist.nb_album"
+      :class="{ disabled: artist.albums.length == artist.nb_album }"
     >
       Afficher plus
     </button>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+</style>

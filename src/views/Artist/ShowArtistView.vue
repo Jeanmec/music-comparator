@@ -16,7 +16,15 @@ export default {
       albums_pagination_index: 0
     }
   },
-  methods: {},
+  methods: {
+    // Va chercher de nouveaux album avec la pagination
+    async handleFetchMoreAlbums() {
+      this.albums_pagination_index += 5
+      let albums = await getArtistAlbums(this.artist.id, this.albums_pagination_index)
+
+      this.artist.albums = [...this.artist.albums, ...albums]
+    }
+  },
 
   async mounted() {
     // Récupère les info de l'artiste
@@ -29,8 +37,6 @@ export default {
     this.artist.top_tracks = await getArtistTopTracks(this.artist.id)
     // Albums de l'artiste (pagination)
     this.artist.albums = await getArtistAlbums(this.artist.id, this.albums_pagination_index)
-
-    console.log(this.artist)
   }
 }
 </script>
@@ -41,7 +47,11 @@ export default {
 
     <ArtistPopularTracks v-if="artist.top_tracks" :tracks="artist.top_tracks" />
 
-    <ArtistAlbums v-if="artist.albums" :artist="artist" />
+    <ArtistAlbums
+      v-if="artist.albums"
+      :artist="artist"
+      @fetch-more-albums-event="handleFetchMoreAlbums"
+    />
 
     <!-- <TreemapAlbumsFans v-if="albumsData" :albumsData="albumsData" /> -->
   </div>
