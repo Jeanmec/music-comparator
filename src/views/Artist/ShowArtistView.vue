@@ -1,15 +1,19 @@
 <script>
 import ArtistPresentation from '../../components/Artist/ArtistPresentation.vue'
-import ArtistPopularSong from '../../components/Artist/ArtistPopularSong.vue'
-import { getArtist, getArtistTopSongs } from '../../services/Artist/ArtistService.js'
-// import TheMostPopularTrackOfAArtist from '../../components/Artist/TheMostPopularTrackOfAArtist.vue'
-// import TreemapAlbumsFans from '../../components/Chart/TreemapAlbumsFans.vue'
+import ArtistPopularTracks from '../../components/Artist/ArtistPopularTracks.vue'
+import ArtistAlbums from '../../components/Artist/ArtistAlbums.vue'
+import {
+  getArtist,
+  getArtistTopTracks,
+  getArtistAlbums
+} from '../../services/Artist/ArtistService.js'
 
 export default {
-  components: { ArtistPresentation, ArtistPopularSong },
+  components: { ArtistPresentation, ArtistPopularTracks, ArtistAlbums },
   data: () => {
     return {
-      artist: {}
+      artist: {},
+      albums_pagination_index: 0
     }
   },
   methods: {},
@@ -22,50 +26,23 @@ export default {
     if (this.artist.error) this.$router.push('/')
 
     // Meilleur son de l'artiste
-    this.artist.top_songs = await getArtistTopSongs(this.artist.id)
+    this.artist.top_tracks = await getArtistTopTracks(this.artist.id)
+    // Albums de l'artiste (pagination)
+    this.artist.albums = await getArtistAlbums(this.artist.id, this.albums_pagination_index)
 
     console.log(this.artist)
   }
-
-  // components: {
-  //   ArtistPresentation,
-  //   TheMostPopularTrackOfAArtist,
-  //   TreemapAlbumsFans
-  // }
-  // data: function () {
-  //   return { artistTopTracks: [], artistData: [], albumsData: [] }
-  // },
-  // async mounted() {
-  //   const artistTopTracks = await this.getArtistTopTracks(this.$route.params.id)
-  //   this.artistTopTracks = artistTopTracks.data.data
-  //   const artistData = await this.getArtistData(this.$route.params.id)
-  //   this.artistData = artistData.data
-  //   const albumsData = await this.getAlbumsData(this.$route.params.id)
-  //   this.albumsData = albumsData.data.data
-  // },
-  // methods: {
-  //   async getArtistTopTracks(artistId) {
-  //     return await axios.get('https://api.deezer.com/artist/' + artistId + '/top?limit=5')
-  //   },
-  //   async getArtistData(artistId) {
-  //     return await axios.get('https://api.deezer.com/artist/' + artistId)
-  //   },
-  //   async getAlbumsData(artistId) {
-  //     return await axios.get('https://api.deezer.com/artist/' + artistId + '/albums')
-  //   }
-  // }
 }
 </script>
 
 <template>
-  <div class="flex flex-col my-5 gap-10 w-1/3">
-    <ArtistPresentation :artist="artist" />
+  <div class="flex flex-col my-5 gap-10 w-3/6">
+    <ArtistPresentation v-if="artist" :artist="artist" />
 
-    <ArtistPopularSong :songs="artist.top_songs" />
-    <!-- <div class="grid"> -->
-    <!-- <ArtistPresentation :artistData="artistData" /> -->
-    <!-- <TheMostPopularTrackOfAArtist :artistTopTracks="artistTopTracks" /> -->
-    <!-- </div> -->
+    <ArtistPopularTracks v-if="artist.top_tracks" :tracks="artist.top_tracks" />
+
+    <ArtistAlbums v-if="artist.albums" :artist="artist" />
+
     <!-- <TreemapAlbumsFans v-if="albumsData" :albumsData="albumsData" /> -->
   </div>
 </template>

@@ -43,6 +43,27 @@ app.get('/artist/:id/top', async (req, res) => {
     })
 })
 
+// Retourne les albums d'un artiste
+app.get('/artist/:id/albums', async (req, res) => {
+  let url =
+    'https://api.deezer.com/artist/' +
+    req.params.id +
+    '/albums?index=' +
+    req.params.index +
+    '&limit=5'
+
+  axios({
+    method: 'get',
+    url
+  })
+    .then((response) => {
+      res.send(JSON.stringify(response.data))
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+})
+
 // Démarage du serveur
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`)
