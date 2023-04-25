@@ -7,6 +7,7 @@ export async function getArtist(artistId) {
 }
 
 // Retourne les meilleurs son d'un artiste
-// export async function getArtistTopTracks(artistId) {
-//   return await axios.get('https://api.deezer.com/artist/' + artistId + '/top?limit=5')
-// }
+export async function getArtistTopSongs(artistId) {
+  let response = await axios.get(import.meta.env.VITE_API_URL + '/artist/' + artistId + '/top')
+  return response.data.data
+}

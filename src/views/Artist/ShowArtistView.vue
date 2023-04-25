@@ -1,13 +1,12 @@
 <script>
 import ArtistPresentation from '../../components/Artist/ArtistPresentation.vue'
-import { getArtist } from '../../services/Artist/ArtistService.js'
-
+import ArtistPopularSong from '../../components/Artist/ArtistPopularSong.vue'
+import { getArtist, getArtistTopSongs } from '../../services/Artist/ArtistService.js'
 // import TheMostPopularTrackOfAArtist from '../../components/Artist/TheMostPopularTrackOfAArtist.vue'
 // import TreemapAlbumsFans from '../../components/Chart/TreemapAlbumsFans.vue'
 
-//todo if artist id is incorrect
 export default {
-  components: { ArtistPresentation },
+  components: { ArtistPresentation, ArtistPopularSong },
   data: () => {
     return {
       artist: {}
@@ -16,7 +15,14 @@ export default {
   methods: {},
 
   async mounted() {
+    // Récupère les info de l'artiste
     this.artist = await getArtist(this.$route.params.id)
+
+    // L'ariste est introuvable
+    if (this.artist.error) this.$router.push('/')
+
+    // Meilleur son de l'artiste
+    this.artist.top_songs = await getArtistTopSongs(this.artist.id)
 
     console.log(this.artist)
   }
@@ -52,10 +58,10 @@ export default {
 </script>
 
 <template>
-  <div class="flex flex-col my-5">
+  <div class="flex flex-col my-5 gap-10 w-1/3">
     <ArtistPresentation :artist="artist" />
 
-    <p></p>
+    <ArtistPopularSong :songs="artist.top_songs" />
     <!-- <div class="grid"> -->
     <!-- <ArtistPresentation :artistData="artistData" /> -->
     <!-- <TheMostPopularTrackOfAArtist :artistTopTracks="artistTopTracks" /> -->

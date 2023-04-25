@@ -1,7 +1,29 @@
+<script>
+import { ClockTimeEightOutline, Eye, EyeOff } from 'mdue'
+
+export default {
+  components: { ClockTimeEightOutline, Eye, EyeOff },
+  props: ['songs'],
+  data: () => {
+    return {}
+  }
+}
+</script>
+
 <template>
   <div>
-    <ul class="flex flex-col gap-4">
-      <li v-for="(track, index) in tracks" :key="index">
+    <ul class="flex flex-col gap-5">
+      <li v-for="(song, i) in songs" :key="i" class="flex flex-row items-center">
+        <span class="h-max">{{ i + 1 }}</span>
+        <img class="mx-5 w-10 h-10 rounded" :src="song.album.cover" alt="cover" />
+        <!-- Titre -->
+        <span>{{ song.title }}</span>
+        <!-- Durée -->
+        <span class="ml-auto">{{
+          song.duration.toString().replace(/(\d{1,2})(\d{2})$/, '$1:$2')
+        }}</span>
+
+        <!-- 
         <div class="flex items-center" :id="index">
           <span class="text-xl font-bold mx-6">#{{ index + 1 }}</span>
           <div class="flex flex-col gap-y-2">
@@ -36,68 +58,10 @@
             ></audio>
           </div>
         </div>
+        -->
       </li>
     </ul>
   </div>
 </template>
 
-<script>
-import { ClockTimeEightOutline, Eye, EyeOff } from 'mdue'
-
-export default {
-  components: { ClockTimeEightOutline, Eye, EyeOff },
-  props: ['artistTopTracks'],
-  data() {
-    return {
-      tracks: [],
-      infoVisible: false,
-      trackInfoVisibility: []
-    }
-  },
-  watch: {
-    artistTopTracks: {
-      immediate: true,
-      handler(newVal, oldVal) {
-        this.tracks = newVal
-      }
-    }
-  },
-  methods: {
-    toogleVisibility(index) {
-      this.trackInfoVisibility[index] = !this.trackInfoVisibility[index]
-    }
-  }
-}
-</script>
-
-<style lang="scss" scoped>
-.animation-appear {
-  animation: show 600ms 100ms cubic-bezier(0.38, 0.97, 0.56, 0.76) forwards;
-
-  // Prestate
-  opacity: 0;
-  // remove transform for just a fade-in
-  transform: rotateX(-90deg);
-  transform-origin: top center;
-}
-
-@keyframes show {
-  100% {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-.track {
-  span svg {
-    color: #cbd5e1;
-    transition: 0.2s;
-  }
-  &:hover {
-    span svg {
-      transition: 0.2s;
-      color: rgb(52 211 153);
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>
