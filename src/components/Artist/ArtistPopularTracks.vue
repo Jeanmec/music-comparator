@@ -1,26 +1,28 @@
 <script>
-import { ClockTimeEightOutline, Eye, EyeOff } from 'mdue'
+// import { ClockTimeEightOutline, Eye, EyeOff } from 'mdue'
 
 export default {
-  components: { ClockTimeEightOutline, Eye, EyeOff },
-  props: ['songs'],
+  // components: { ClockTimeEightOutline, Eye, EyeOff },
+  props: ['tracks'],
   data: () => {
     return {}
   }
+  // fmtMSS(s){return(s-(s%=60))/60+(9<s?':':':0')+s}
 }
 </script>
 
 <template>
   <div>
+    <h3 class="font-bold text-2xl mb-5">Top Tracks</h3>
     <ul class="flex flex-col gap-5">
-      <li v-for="(song, i) in songs" :key="i" class="flex flex-row items-center">
+      <li v-for="(track, i) in tracks" :key="i" class="flex flex-row items-center">
         <span class="h-max">{{ i + 1 }}</span>
-        <img class="mx-5 w-10 h-10 rounded" :src="song.album.cover" alt="cover" />
+        <img class="mx-5 w-10 h-10 rounded" :src="track.album.cover" alt="cover" />
         <!-- Titre -->
-        <span>{{ song.title }}</span>
+        <span>{{ track.title }}</span>
         <!-- Durée -->
         <span class="ml-auto">{{
-          song.duration.toString().replace(/(\d{1,2})(\d{2})$/, '$1:$2')
+          track.duration.toString().replace(/(\d{1,2})(\d{2})$/, '$1:$2')
         }}</span>
 
         <!-- 
