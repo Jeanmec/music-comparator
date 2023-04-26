@@ -45,8 +45,6 @@ app.get('/artist/:id/top', async (req, res) => {
 
 // Retourne les albums d'un artiste
 app.get('/artist/:id/albums', async (req, res) => {
-  console.log(req.query.index)
-
   let url =
     'https://api.deezer.com/artist/' +
     req.params.id +
