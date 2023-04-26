@@ -4,7 +4,6 @@
   >
     <nav>
       <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/artist/13">Discover artist</RouterLink>
     </nav>
   </header>
 
