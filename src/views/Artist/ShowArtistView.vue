@@ -2,6 +2,7 @@
 import ArtistPresentation from '../../components/Artist/ArtistPresentation.vue'
 import ArtistPopularTracks from '../../components/Artist/ArtistPopularTracks.vue'
 import ArtistAlbums from '../../components/Artist/ArtistAlbums.vue'
+import TreemapAlbumsFans from '../../components/Chart/TreemapAlbumsFans.vue'
 import {
   getArtist,
   getArtistTopTracks,
@@ -9,7 +10,7 @@ import {
 } from '../../services/Artist/ArtistService.js'
 
 export default {
-  components: { ArtistPresentation, ArtistPopularTracks, ArtistAlbums },
+  components: { ArtistPresentation, ArtistPopularTracks, ArtistAlbums, TreemapAlbumsFans },
   data: () => {
     return {
       artist: {},
@@ -37,6 +38,8 @@ export default {
     this.artist.top_tracks = await getArtistTopTracks(this.artist.id)
     // Albums de l'artiste (pagination)
     this.artist.albums = await getArtistAlbums(this.artist.id, this.albums_pagination_index)
+
+    console.log(this.artist)
   }
 }
 </script>
@@ -53,6 +56,6 @@ export default {
       @fetch-more-albums-event="handleFetchMoreAlbums"
     />
 
-    <!-- <TreemapAlbumsFans v-if="albumsData" :albumsData="albumsData" /> -->
+    <TreemapAlbumsFans v-if="artist.albums" :albums="artist.albums" />
   </div>
 </template>
