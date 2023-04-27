@@ -5,6 +5,7 @@
       v-for="(artist, index) in searchedArtists"
       :key="index"
     >
+      <!-- Loop through each album of the current artist and display its cover image -->
       <div v-for="(album, index) in artist.albums" :key="index">
         <span :style="'filter: blur(' + index + 'px)'">
           <img :src="album.cover" class="w-16" />

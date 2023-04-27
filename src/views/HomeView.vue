@@ -49,7 +49,7 @@ import ProjectIntroduction from '../components/Home/ProjectIntroduction.vue'
 import AreaChartPositionForNbFans from '../components/Chart/AreaChartPositionForNbFans.vue'
 import NumberAlbums from '../components/Versus/NumberAlbums.vue'
 import VersusPresentation from '../components/Versus/VersusPresentation.vue'
-import AlbumsPreview from '../components/AlbumsPreview.vue'
+import AlbumsPreview from '../components/Artist/AlbumsPreview.vue'
 import RadioPresence from '../components/Versus/RadioPresence.vue'
 import BarNumberOfFans from '../components/Chart/BarNumberOfFans.vue'
 import ArtistPopularTracksPreview from '../components/Artist/ArtistPopularTracksPreview.vue'
@@ -88,7 +88,6 @@ export default {
   async mounted() {
     await this.getTopChartArtistsData()
     await this.selectRandomArtists()
-    console.log(this.selectedArtists)
   },
 
   methods: {
@@ -129,8 +128,6 @@ export default {
         this.selectedArtists[artistToReplace].tracks = artistTopTracks
         this.artistToCompare = !this.artistToCompare
       }
-
-      console.log(this.selectedArtists)
     },
     async searchArtist(query) {
       this.searchError = ''

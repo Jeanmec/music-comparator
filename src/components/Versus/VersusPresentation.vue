@@ -23,11 +23,6 @@
 import { LinkVariant } from 'mdue'
 export default {
   props: ['searchedArtists'],
-  components: { LinkVariant },
-  methods: {
-    show() {
-      console.log(this.searchedArtists)
-    }
-  }
+  components: { LinkVariant }
 }
 </script>

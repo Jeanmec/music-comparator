@@ -1,5 +1,6 @@
 <template>
   <div id="chart">
+    <!-- apexcharts component to display the chart -->
     <apexcharts
       v-if="chartOptions.xaxis.categories.length > 0 && this.series[0].data.length > 0"
       height="350"
@@ -8,7 +9,6 @@
       :series="series"
     ></apexcharts>
   </div>
-  <button @click="testo"></button>
 </template>
 
 <script>
@@ -19,17 +19,21 @@ export default {
   },
   props: ['topChartArtist'],
   watch: {
+    // watch for changes in topChartArtist prop and update the chart
     topChartArtist: {
-      immediate: true,
+      immediate: true, // runs handler immediately when component is mounted
       handler(newVal, oldVal) {
         let arrayCategories = []
         let arrayNb_fan = []
         for (let i = 0; i < newVal.length; i++) {
           const artist = newVal[i]
+          // add artist name and position to categories array
           arrayCategories.push('#' + artist.position + ' ' + artist.name)
+          // add artist fan count to data array
           arrayNb_fan.push(artist.nb_fan)
         }
-
+        
+        // update the chart series data and x-axis categories
         this.series[0].data = arrayNb_fan
         this.chartOptions.xaxis.categories = arrayCategories
       }

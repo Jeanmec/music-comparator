@@ -24,12 +24,14 @@ export default {
       handler(newVal, oldVal) {
         let data = []
         let artists = []
+        // Loop through the array of searched artists and push their number of fans and name to data and artists arrays
         for (let i = 0; i < newVal.length; i++) {
           const artist = newVal[i].data
           data.push(artist.nb_fan)
           artists.push(artist.name)
         }
 
+        // update the chart series data and x-axis categories
         this.series[0].data = data
       }
     }

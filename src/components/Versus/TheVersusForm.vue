@@ -10,6 +10,7 @@
 </template>
 
 <script>
+//This component will allow to determine a fixed visual order of the child components to be displayed.
 export default {
   props: ['searchedArtists']
 }

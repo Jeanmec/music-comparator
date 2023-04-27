@@ -9,18 +9,21 @@
               class="flex gap-x-2 cursor-pointer flex-wrap track"
               @click="toogleVisibility(index)"
             >
+              <!-- Show an explicit label if track has explicit content -->
               <span
                 v-show="track.explicit_content_lyrics && trackInfoVisibility[index]"
                 class="animation-appear text-xs inline-flex items-center font-bold leading-sm uppercase px-3 py-1 bg-red-200 text-red-700 rounded-full"
               >
                 Explicit lyrics
               </span>
+              <!-- Display the track duration -->
               <span
                 class="flex items-center gap-x-1 text-xs font-bold leading-sm uppercase px-3 py-1 rounded-full bg-white text-gray-700 border"
                 ><ClockTimeEightOutline />{{
                   new Date(track.duration * 1000).toTimeString().slice(3, 9)
                 }}
               </span>
+              <!-- Display the track title and show/hide icons -->
               <span class="font-bold flex items-center gap-x-2"
                 >{{ track.title }} <Eye v-if="!trackInfoVisibility[index]" /><EyeOff
                   v-if="trackInfoVisibility[index]"
@@ -28,6 +31,7 @@
               </span>
             </div>
 
+            <!-- Show an audio player if the track is currently visible -->
             <audio
               v-show="trackInfoVisibility[index]"
               class="animation-appear"
@@ -48,11 +52,13 @@ export default {
   components: { ClockTimeEightOutline, Eye, EyeOff },
   props: ['artist'],
   data() {
+    // Set initial visibility state for each track to false
     return {
       trackInfoVisibility: []
     }
   },
   methods: {
+    // Toggle the visibility state of the clicked track
     toogleVisibility(index) {
       this.trackInfoVisibility[index] = !this.trackInfoVisibility[index]
     }

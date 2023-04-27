@@ -21,6 +21,7 @@
 export default {
   props: ['searchedArtists'],
   methods: {
+    // Emit a 'selectedArtist' event with the selected artist as a parameter
     selectArtist(artist) {
       this.$emit('selectedArtist', artist)
     }
