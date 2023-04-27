@@ -6,21 +6,29 @@
       <AreaChartPositionForNbFans :topChartArtist="topChartArtist" />
     </div>
 
-    <SearchBar @searchArtist="searchArtist" id="search-bar" />
+    <SearchBar @searchArtist="searchArtist" :error="searchError" id="search-bar" />
 
-    <TheVersusSelection :searchedArtists="searchResult" @selectedArtist="toogleArtistSelection" />
+    <TheVersusSelection :searchedArtists="searchResult" @selectedArtist="toggleArtistSelection" />
 
-    <TheVersusForm>
+    <TheVersusForm v-if="selectedArtistsData && selectedArtistsData.length > 0">
       <template v-slot:presentation>
-        <VersusPresentation :searchedArtists="selectedArtist" />
+        <VersusPresentation :searchedArtists="selectedArtistsData" />
       </template>
 
       <template v-slot:number-albums>
-        <NumberAlbums :searchedArtists="selectedArtist" />
+        <NumberAlbums :searchedArtists="selectedArtistsData" />
       </template>
 
       <template v-slot:albums-preview>
-        <AlbumsPreview :albumsOfSelectedArtist="albumsOfSelectedArtist" />
+        <AlbumsPreview :searchedArtists="selectedArtistsData" />
+      </template>
+
+      <template v-slot:radio-presence>
+        <RadioPresence :searchedArtists="selectedArtistsData" />
+      </template>
+
+      <template v-slot:chart-fans>
+        <InflationNumberOfFans :searchedArtists="selectedArtistsData" />
       </template>
     </TheVersusForm>
   </div>
@@ -36,6 +44,15 @@ import AreaChartPositionForNbFans from '../components/Chart/AreaChartPositionFor
 import NumberAlbums from '../components/Versus/NumberAlbums.vue'
 import VersusPresentation from '../components/Versus/VersusPresentation.vue'
 import AlbumsPreview from '../components/AlbumsPreview.vue'
+import RadioPresence from '../components/Versus/RadioPresence.vue'
+import InflationNumberOfFans from '../components/Chart/BarNumberOfFans.vue'
+
+import {
+  getTopChartArtists,
+  getArtist,
+  getArtistAlbums,
+  searchArtist
+} from '../services/Artist/ArtistService.js'
 
 export default {
   components: {
@@ -46,131 +63,80 @@ export default {
     SearchBar,
     NumberAlbums,
     VersusPresentation,
-    AlbumsPreview
+    AlbumsPreview,
+    RadioPresence,
+    InflationNumberOfFans
   },
   data: function () {
     return {
-      searchResult: [],
-      selectedArtist: [],
+      selectedArtistsData: [],
       topChartArtist: [],
-      albumsOfSelectedArtist: [],
-      chart: {
-        type: 'area'
-      },
-      stroke: {
-        show: true,
-        width: 4,
-        colors: ['#2f4cdd', '#b519ec']
-      },
-      series: [
-        {
-          name: 'series1',
-          data: [31, 40, 28, 51, 42, 109, 100]
-        },
-        {
-          name: 'series2',
-          data: [11, 32, 45, 32, 34, 52, 41]
-        },
-        {
-          name: 'series3',
-          data: [15, 32, 48, 3, 14, 32, 71]
-        }
-      ],
-      chartOptions: {
-        colors: ['#9DF3C4', '#62D2A2', '#1FAB89'],
-        chart: {
-          height: 350,
-          type: 'area',
-          zoom: {
-            enabled: false
-          },
-          toolbar: {
-            show: false
-          }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          curve: 'smooth'
-        },
-        title: {
-          text: '',
-          align: 'left'
-        },
-
-        xaxis: {
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep']
-        }
-      }
+      searchResult: [],
+      artistToCompare: false,
+      searchError: ''
     }
   },
   async mounted() {
-    await this.getTopChartArtists()
-    this.selectedArtist[0] = (await this.getArtistData(this.randomIntFromInterval(1, 150))).data
-    this.selectedArtist[1] = (await this.getArtistData(this.randomIntFromInterval(1, 150))).data
-
-    this.albumsOfSelectedArtist[0] = (
-      await this.getAlbumsOfArtist(this.selectedArtist[0].id)
-    ).data.data
-    this.albumsOfSelectedArtist[1] = (
-      await this.getAlbumsOfArtist(this.selectedArtist[1].id)
-    ).data.data
+    await this.getTopChartArtistsData()
+    await this.selectRandomlyArtist()
   },
 
   methods: {
+    async selectRandomlyArtist() {
+      let selectedArtistsData = []
+      for (let i = 0; i < 2; i++) {
+        let artistData = await getArtist(this.randomIntFromInterval(1, 50))
+        artistData.albums = await getArtistAlbums(artistData.id, 0)
+        selectedArtistsData.push(artistData)
+      }
+      this.selectedArtistsData = selectedArtistsData
+    },
     randomIntFromInterval(min, max) {
       return Math.floor(Math.random() * (max - min + 1) + min)
     },
-    toogleArtistSelection(elements) {
+    async toggleArtistSelection(artist) {
       this.searchResult = []
-      if (this.selectedArtist.length == 2) {
-        this.selectedArtist[0] = elements
+      let artistAlbums = await getArtistAlbums(artist.id, 0)
+      artist.albums = artistAlbums
+      if (this.selectedArtistsData.length == 2) {
+        if (!this.artistToCompare) {
+          this.selectedArtistsData[0] = artist
+        } else {
+          this.selectedArtistsData[1] = artist
+        }
+        this.artistToCompare = !this.artistToCompare
       } else {
-        this.selectedArtist.push(elements)
+        this.selectedArtistsData.push(artist)
       }
     },
     async searchArtist(query) {
-      const res = await axios.get('https://api.deezer.com/search/artist?q=' + query)
-      if (res.data.data.length > 0) {
-        for (let i = 0; i < res.data.data.length; i++) {
-          const element = res.data.data[i]
-          this.searchResult.push(element)
-        }
+      this.searchError = ''
+      let searchResult = await searchArtist(query)
+      if (searchResult.length > 0) {
+        this.searchResult = await searchArtist(query)
+      } else {
+        this.searchError = 'No results for the search : ' + query
       }
     },
-    async getTopChartArtists() {
-      const res = await axios.get('https://api.deezer.com/chart/0/artists')
-      if (res.data.data.length > 0) {
-        let topChartArtist = []
-        for (let i = 0; i < res.data.data.length; i++) {
-          const artist = res.data.data[i]
-          const artistData = await this.getArtistData(artist.id)
-          artistData.data.position = artist.position
-          topChartArtist.push(artistData.data)
+    async getTopChartArtistsData() {
+      const topChartArtists = await getTopChartArtists()
+
+      if (topChartArtists.length > 0) {
+        let artistsData = []
+        for (let i = 0; i < topChartArtists.length; i++) {
+          const artist = topChartArtists[i]
+          const artistData = await getArtist(artist.id)
+          artistData.position = artist.position
+          artistsData.push(artistData)
         }
-        this.topChartArtist = topChartArtist
+        this.topChartArtist = artistsData
       }
-    },
-    async getArtistData(artistId) {
-      return await axios.get('https://api.deezer.com/artist/' + artistId)
-    },
-    async getAlbumsOfArtist(artistId) {
-      return await axios.get('https://api.deezer.com/artist/' + artistId + '/albums')
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-header {
-  align-self: center;
-  nav {
-    display: flex;
-    align-self: center;
-    column-gap: 15px;
-  }
-}
 .container {
   width: 80%;
 }

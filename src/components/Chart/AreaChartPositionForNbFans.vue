@@ -22,7 +22,6 @@ export default {
     topChartArtist: {
       immediate: true,
       handler(newVal, oldVal) {
-        console.log(newVal)
         let arrayCategories = []
         let arrayNb_fan = []
         for (let i = 0; i < newVal.length; i++) {

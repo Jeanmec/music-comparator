@@ -1,7 +1,7 @@
 <template>
-  <div class="flex items-center" v-if="searchedArtists && searchedArtists.length > 0">
+  <div class="flex items-center">
     <div
-      class="flex flex-col items-center gap-y-4 w-1/2"
+      class="flex flex-col items-center gap-y-4 w-1/2 my-6"
       v-for="(artist, index) in searchedArtists"
       :key="index"
     >

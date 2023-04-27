@@ -71,3 +71,18 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.transition-smooth {
+  transition: 0.2s;
+}
+.transition-smooth:hover {
+  transition: 0.2s;
+}
+
+::-moz-selection {
+  /* Code for Firefox */
+  background-color: #bbf7d0;
+}
+
+::selection {
+  background-color: #bbf7d0;
+}

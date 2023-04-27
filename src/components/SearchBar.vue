@@ -17,6 +17,7 @@
         Search <Magnify />
       </button>
     </div>
+    <span v-if="error" class="text-red-500">{{ error }}</span>
   </div>
 </template>
 
@@ -25,6 +26,7 @@ import { Magnify } from 'mdue'
 
 export default {
   components: { Magnify },
+  props: ['error'],
   data() {
     return {
       query: ''
@@ -34,6 +36,7 @@ export default {
     async search() {
       if (this.query) {
         this.$emit('searchArtist', this.query)
+        this.query = ''
       }
     }
   }

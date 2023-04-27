@@ -5,12 +5,12 @@
   >
     <span class="font-bold text-4xl">Select your artist</span>
     <div class="flex flex-wrap justify-center gap-2 my-3 mx-20">
-      <div v-for="(result, index) in searchedArtists" :key="result" class="result">
+      <div v-for="(artist, index) in searchedArtists" :key="artist" class="artist">
         <span
-          @click="selectArtist(result)"
-          class="text-xs inline-flex items-center font-bold leading-sm px-3 py-1 rounded-full bg-white text-gray-700 border cursor-pointer gap-3"
+          @click="selectArtist(artist)"
+          class="text-xs inline-flex items-center font-bold leading-sm px-3 py-1 rounded-full bg-white text-gray-700 border cursor-pointer gap-3 ga"
         >
-          <img :src="result.picture_small" class="w-10 h-10 rounded-full" /> {{ result.name }}</span
+          <img :src="artist.picture_small" class="w-10 h-10 rounded-full" /> {{ artist.name }}</span
         >
       </div>
     </div>
@@ -21,29 +21,21 @@
 export default {
   props: ['searchedArtists'],
   methods: {
-    selectArtist(result) {
-      this.$emit('selectedArtist', result)
-      this.removeItemFromArrayById(this.searchedArtists, result.id)
-    },
-    removeItemFromArrayById(arr, id) {
-      let index = arr.findIndex((item) => item.id === id)
-      while (index !== -1) {
-        arr.splice(index, 1)
-        index = arr.findIndex((item) => item.id === id)
-      }
+    selectArtist(artist) {
+      this.$emit('selectedArtist', artist)
     }
   }
 }
 </script>
 
-<style lang="scss">
-.result {
+<style lang="scss" scoped>
+.artist {
   &:hover {
     transition: 0.2s;
     span {
-      border: 1px solid green;
+      border: 1px solid #22c55e;
       transition: 0.2s;
-      color: green;
+      color: #22c55e;
     }
   }
 }
