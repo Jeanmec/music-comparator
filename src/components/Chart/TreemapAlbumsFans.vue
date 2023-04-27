@@ -1,19 +1,8 @@
-<template>
-  <div id="chart">
-    <apexchart
-      height="350"
-      :options="chartOptions"
-      :series="series"
-      v-if="chartOptions.plotOptions.treemap.colorScale.ranges[1].to"
-    ></apexchart>
-  </div>
-</template>
-
 <script>
 export default {
-  props: ['albumsData'],
+  props: ['albums'],
   watch: {
-    albumsData: {
+    albums: {
       immediate: true,
       handler(newVal, oldVal) {
         let data = []
@@ -32,7 +21,7 @@ export default {
       }
     }
   },
-  data: function () {
+  data: () => {
     return {
       artist: [],
       chart: {
@@ -48,7 +37,7 @@ export default {
           type: 'treemap'
         },
         title: {
-          text: 'Popularity per album (number of fans)',
+          text: 'Popularité des albums en nombre de fan',
           align: 'center'
         },
         dataLabels: {
@@ -77,5 +66,16 @@ export default {
   }
 }
 </script>
+
+<template>
+  <div id="chart">
+    <apexchart
+      height="350"
+      :options="chartOptions"
+      :series="series"
+      v-if="chartOptions.plotOptions.treemap.colorScale.ranges[1].to"
+    ></apexchart>
+  </div>
+</template>
 
 <style></style>

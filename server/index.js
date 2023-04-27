@@ -49,7 +49,7 @@ app.get('/artist/:id/albums', async (req, res) => {
     'https://api.deezer.com/artist/' +
     req.params.id +
     '/albums?index=' +
-    req.params.index +
+    req.query.index +
     '&limit=5'
 
   axios({
