@@ -1,5 +1,8 @@
 <template>
-  <div class="w-6/12 mx-auto my-4">
+  <div class="w-6/12 mx-auto my-8">
+    <h2 class="my-4 text-center text-2xl font-semibold">
+      Search for and compare your favorite artists
+    </h2>
     <div class="relative">
       <input
         type="search"

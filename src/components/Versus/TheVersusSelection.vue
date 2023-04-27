@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="searchedArtists && searchedArtists.length > 0"
-    class="flex flex-col items-center my-4 gap-y-2"
+    class="flex flex-col items-center my-4 gap-y-2 animation-appear"
   >
     <span class="font-bold text-4xl">Select your artist</span>
     <div class="flex flex-wrap justify-center gap-2 my-3 mx-20">

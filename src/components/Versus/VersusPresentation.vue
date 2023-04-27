@@ -2,8 +2,12 @@
   <div class="flex items-center">
     <template v-for="(artist, index) in searchedArtists" :key="index">
       <div class="flex flex-col items-center gap-y-4 w-1/2">
-        <img :src="artist.picture" class="rounded-full w-24" />
-        <span class="text-3xl font-bold text-gray-900 dark:text-white">{{ artist.name }}</span>
+        <img :src="artist.data.picture" class="rounded-full w-24" />
+        <a
+          :href="'/artist/' + artist.data.id"
+          class="text-3xl flex items-center gap-x-1 font-bold text-gray-900 dark:text-white"
+          >{{ artist.data.name }} <LinkVariant class="text-green-500"
+        /></a>
       </div>
 
       <span
@@ -16,9 +20,14 @@
 </template>
 
 <script>
+import { LinkVariant } from 'mdue'
 export default {
-  props: ['searchedArtists']
+  props: ['searchedArtists'],
+  components: { LinkVariant },
+  methods: {
+    show() {
+      console.log(this.searchedArtists)
+    }
+  }
 }
 </script>
-
-<style></style>

@@ -1,109 +1,92 @@
 <template>
   <div id="chart">
-    <apexchart height="350" :options="chartOptions" :series="series"></apexchart>
+    <apexcharts
+      ref="barNumberOfFans"
+      height="350"
+      :options="chartOptions"
+      :series="series"
+    ></apexcharts>
   </div>
 </template>
 
 <script>
+import VueApexCharts from 'vue3-apexcharts'
 export default {
   props: ['searchedArtists'],
+  components: {
+    apexcharts: VueApexCharts
+  },
   watch: {
     searchedArtists: {
       immediate: true,
-      handler(newVal, oldVal) {
-        console.log(newVal)
+      deep: true,
 
-        // let data = []
-        // // let maxFans = 0
-        // for (let i = 0; i < newVal.length; i++) {
-        //   const artist = newVal[i]
-        //   data.push({ x: album.title, y: album.fans })
-        // }
-        // this.series[0].data = data
-        // this.chartOptions.plotOptions.treemap.colorScale.ranges[0].to = Math.ceil(maxFans / 2)
-        // this.chartOptions.plotOptions.treemap.colorScale.ranges[1].from = Math.ceil(maxFans / 2)
-        // this.chartOptions.plotOptions.treemap.colorScale.ranges[1].to = maxFans
+      handler(newVal, oldVal) {
+        let data = []
+        let artists = []
+        for (let i = 0; i < newVal.length; i++) {
+          const artist = newVal[i].data
+          data.push(artist.nb_fan)
+          artists.push(artist.name)
+        }
+
+        this.series[0].data = data
       }
     }
   },
   data: function () {
     return {
+      toto: [],
       artist: [],
-      series: [
-        {
-          data: [23333, 150000]
-        }
-      ],
+      series: [{}],
       chartOptions: {
         chart: {
-          type: 'bar'
+          type: 'bar',
+          toolbar: {
+            show: false
+          },
+          zoom: {
+            enabled: false
+          }
         },
+
         plotOptions: {
           bar: {
-            borderRadius: 10,
+            borderRadius: 5,
             dataLabels: {
               position: 'top'
             }
           }
+        },
+        fill: {
+          colors: ['#34d399']
         },
         dataLabels: {
           enabled: true,
           formatter: function (val) {
             return val.toLocaleString() + ' fans'
           },
-          offsetY: -20,
+
+          offsetY: 5,
           style: {
-            fontSize: '12px',
-            colors: ['#304758']
+            fontSize: '18px',
+            colors: ['#10b981']
+          },
+          background: {
+            enabled: true,
+            foreColor: '#fff',
+            borderWidth: 0
           }
         },
 
         xaxis: {
-          categories: ['Eminem', '50cent'],
-          position: 'top',
-          axisBorder: {
+          labels: {
             show: false
-          },
-          axisTicks: {
-            show: false
-          },
-          crosshairs: {
-            fill: {
-              type: 'gradient',
-              gradient: {
-                colorFrom: '#D8E3F0',
-                colorTo: '#BED1E6',
-                stops: [0, 100],
-                opacityFrom: 0.4,
-                opacityTo: 0.5
-              }
-            }
-          },
-          tooltip: {
-            enabled: true
           }
         },
         yaxis: {
-          axisBorder: {
-            show: false
-          },
-          axisTicks: {
-            show: false
-          },
           labels: {
-            show: false,
-            formatter: function (val) {
-              return val + '%'
-            }
-          }
-        },
-        title: {
-          text: 'Monthly Inflation in Argentina, 2002',
-          floating: true,
-          offsetY: 330,
-          align: 'center',
-          style: {
-            color: '#444'
+            show: false
           }
         }
       }
@@ -111,5 +94,3 @@ export default {
   }
 }
 </script>
-
-<style></style>

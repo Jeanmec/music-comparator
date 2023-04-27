@@ -9,7 +9,8 @@
         <span class="flex" :class="compareRadio(artist) ? 'bg-green-200 py-2 px-4 rounded-3xl' : ''"
           ><RadioTower /> Radio</span
         >
-        <CheckBold class="text-green-500" v-if="artist.radio" />
+        <!-- Show a check or a cross icon depending on whether the artist has radio checked -->
+        <CheckBold class="text-green-500" v-if="artist.data.radio" />
         <CloseThick class="text-red-500" v-else />
       </div>
     </div>
@@ -26,14 +27,13 @@ export default {
     RadioTower
   },
   computed: {
+    // Check whether this artist's radio is checked and whether there is only one artist with radio checked
     compareRadio() {
       return (artist) => {
-        const filteredArtists = this.searchedArtists.filter((a) => a.radio)
+        const filteredArtists = this.searchedArtists.filter((a) => a.data.radio)
         return filteredArtists.length === 1 && filteredArtists[0].id === artist.id
       }
     }
   }
 }
 </script>
-
-<style></style>

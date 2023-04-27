@@ -1,3 +1,14 @@
+<template>
+  <div id="chart">
+    <apexchart
+      height="350"
+      :options="chartOptions"
+      :series="series"
+      v-if="chartOptions.plotOptions.treemap.colorScale.ranges[1].to"
+    ></apexchart>
+  </div>
+</template>
+
 <script>
 export default {
   props: ['albums'],
@@ -37,7 +48,7 @@ export default {
           type: 'treemap'
         },
         title: {
-          text: 'Popularité des albums en nombre de fan',
+          text: 'Popularity of albums based on the number of fans',
           align: 'center'
         },
         dataLabels: {
@@ -66,16 +77,3 @@ export default {
   }
 }
 </script>
-
-<template>
-  <div id="chart">
-    <apexchart
-      height="350"
-      :options="chartOptions"
-      :series="series"
-      v-if="chartOptions.plotOptions.treemap.colorScale.ranges[1].to"
-    ></apexchart>
-  </div>
-</template>
-
-<style></style>

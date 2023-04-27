@@ -5,6 +5,7 @@
     <slot name="albums-preview"></slot>
     <slot name="radio-presence"></slot>
     <slot name="chart-fans"></slot>
+    <slot name="tracks-preview"></slot>
   </div>
 </template>
 
@@ -13,5 +14,3 @@ export default {
   props: ['searchedArtists']
 }
 </script>
-
-<style></style>

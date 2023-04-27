@@ -1,43 +1,49 @@
 <template>
-  <div class="container">
-    <project-introduction />
+  <div class="w-4/5">
+    <ProjectIntroduction />
 
-    <div class="grid">
-      <AreaChartPositionForNbFans :topChartArtist="topChartArtist" />
-    </div>
+    <AreaChartPositionForNbFans :topChartArtist="topChartArtist" />
 
     <SearchBar @searchArtist="searchArtist" :error="searchError" id="search-bar" />
 
     <TheVersusSelection :searchedArtists="searchResult" @selectedArtist="toggleArtistSelection" />
 
-    <TheVersusForm v-if="selectedArtistsData && selectedArtistsData.length > 0">
+    <TheVersusForm v-if="selectedArtists && selectedArtists[0].data && selectedArtists[1].data">
       <template v-slot:presentation>
-        <VersusPresentation :searchedArtists="selectedArtistsData" />
+        <VersusPresentation :searchedArtists="selectedArtists" />
       </template>
 
       <template v-slot:number-albums>
-        <NumberAlbums :searchedArtists="selectedArtistsData" />
+        <NumberAlbums :searchedArtists="selectedArtists" />
       </template>
 
       <template v-slot:albums-preview>
-        <AlbumsPreview :searchedArtists="selectedArtistsData" />
+        <AlbumsPreview :searchedArtists="selectedArtists" />
       </template>
 
       <template v-slot:radio-presence>
-        <RadioPresence :searchedArtists="selectedArtistsData" />
+        <RadioPresence :searchedArtists="selectedArtists" />
       </template>
 
       <template v-slot:chart-fans>
-        <InflationNumberOfFans :searchedArtists="selectedArtistsData" />
+        <BarNumberOfFans :searchedArtists="selectedArtists" />
+      </template>
+
+      <template v-slot:tracks-preview>
+        <ArtistPopularTracksPreview
+          class="w-6/12 float-left"
+          v-for="(artist, index) in selectedArtists"
+          :key="index"
+          :artist="artist"
+        />
       </template>
     </TheVersusForm>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import TheVersusSelection from '../components/TheVersusSelection.vue'
-import TheVersusForm from '../components/TheVersusForm.vue'
+import TheVersusSelection from '../components/Versus/TheVersusSelection.vue'
+import TheVersusForm from '../components/Versus/TheVersusForm.vue'
 import SearchBar from '../components/SearchBar.vue'
 import ProjectIntroduction from '../components/Home/ProjectIntroduction.vue'
 import AreaChartPositionForNbFans from '../components/Chart/AreaChartPositionForNbFans.vue'
@@ -45,13 +51,15 @@ import NumberAlbums from '../components/Versus/NumberAlbums.vue'
 import VersusPresentation from '../components/Versus/VersusPresentation.vue'
 import AlbumsPreview from '../components/AlbumsPreview.vue'
 import RadioPresence from '../components/Versus/RadioPresence.vue'
-import InflationNumberOfFans from '../components/Chart/BarNumberOfFans.vue'
+import BarNumberOfFans from '../components/Chart/BarNumberOfFans.vue'
+import ArtistPopularTracksPreview from '../components/Artist/ArtistPopularTracksPreview.vue'
 
 import {
   getTopChartArtists,
   getArtist,
   getArtistAlbums,
-  searchArtist
+  searchArtist,
+  getArtistTopTracks
 } from '../services/Artist/ArtistService.js'
 
 export default {
@@ -65,12 +73,13 @@ export default {
     VersusPresentation,
     AlbumsPreview,
     RadioPresence,
-    InflationNumberOfFans
+    BarNumberOfFans,
+    ArtistPopularTracksPreview
   },
   data: function () {
     return {
-      selectedArtistsData: [],
       topChartArtist: [],
+      selectedArtists: [{}, {}],
       searchResult: [],
       artistToCompare: false,
       searchError: ''
@@ -78,46 +87,11 @@ export default {
   },
   async mounted() {
     await this.getTopChartArtistsData()
-    await this.selectRandomlyArtist()
+    await this.selectRandomArtists()
+    console.log(this.selectedArtists)
   },
 
   methods: {
-    async selectRandomlyArtist() {
-      let selectedArtistsData = []
-      for (let i = 0; i < 2; i++) {
-        let artistData = await getArtist(this.randomIntFromInterval(1, 50))
-        artistData.albums = await getArtistAlbums(artistData.id, 0)
-        selectedArtistsData.push(artistData)
-      }
-      this.selectedArtistsData = selectedArtistsData
-    },
-    randomIntFromInterval(min, max) {
-      return Math.floor(Math.random() * (max - min + 1) + min)
-    },
-    async toggleArtistSelection(artist) {
-      this.searchResult = []
-      let artistAlbums = await getArtistAlbums(artist.id, 0)
-      artist.albums = artistAlbums
-      if (this.selectedArtistsData.length == 2) {
-        if (!this.artistToCompare) {
-          this.selectedArtistsData[0] = artist
-        } else {
-          this.selectedArtistsData[1] = artist
-        }
-        this.artistToCompare = !this.artistToCompare
-      } else {
-        this.selectedArtistsData.push(artist)
-      }
-    },
-    async searchArtist(query) {
-      this.searchError = ''
-      let searchResult = await searchArtist(query)
-      if (searchResult.length > 0) {
-        this.searchResult = await searchArtist(query)
-      } else {
-        this.searchError = 'No results for the search : ' + query
-      }
-    },
     async getTopChartArtistsData() {
       const topChartArtists = await getTopChartArtists()
 
@@ -131,13 +105,42 @@ export default {
         }
         this.topChartArtist = artistsData
       }
+    },
+    async selectRandomArtists() {
+      for (let i = 0; i < 2; i++) {
+        let randomId = this.randomIntFromInterval(1, 50)
+        this.selectedArtists[i].albums = await getArtistAlbums(randomId, 0)
+        this.selectedArtists[i].data = await getArtist(randomId)
+        this.selectedArtists[i].tracks = await getArtistTopTracks(randomId)
+      }
+    },
+    randomIntFromInterval(min, max) {
+      return Math.floor(Math.random() * (max - min + 1) + min)
+    },
+    async toggleArtistSelection(artist) {
+      this.searchResult = []
+      let artistAlbums = await getArtistAlbums(artist.id, 0)
+      let artistTopTracks = await getArtistTopTracks(artist.id)
+
+      if (this.selectedArtists.length === 2) {
+        const artistToReplace = this.artistToCompare ? 1 : 0
+        this.selectedArtists[artistToReplace].data = artist
+        this.selectedArtists[artistToReplace].albums = artistAlbums
+        this.selectedArtists[artistToReplace].tracks = artistTopTracks
+        this.artistToCompare = !this.artistToCompare
+      }
+
+      console.log(this.selectedArtists)
+    },
+    async searchArtist(query) {
+      this.searchError = ''
+      let searchResult = await searchArtist(query)
+      if (searchResult.length > 0) {
+        this.searchResult = await searchArtist(query)
+      } else {
+        this.searchError = 'No results for the search : ' + query
+      }
     }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.container {
-  width: 80%;
-}
-</style>
