@@ -1,9 +1,3 @@
-<script>
-export default {
-  props: ['artist']
-}
-</script>
-
 <template>
   <div class="flex flex-col align-center justify-center">
     <!-- Photo de l'artiste -->
@@ -17,3 +11,9 @@ export default {
     <span class="text-center">{{ artist.nb_fan }} fans</span>
   </div>
 </template>
+
+<script>
+export default {
+  props: ['artist']
+}
+</script>

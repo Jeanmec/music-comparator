@@ -1,3 +1,14 @@
+<template>
+  <div id="chart">
+    <apexchart
+      height="350"
+      :options="chartOptions"
+      :series="series"
+      v-if="chartOptions.plotOptions.treemap.colorScale.ranges[1].to"
+    ></apexchart>
+  </div>
+</template>
+
 <script>
 export default {
   props: ['albums'],
@@ -14,7 +25,10 @@ export default {
           }
           data.push({ x: album.title, y: album.fans })
         }
+        // Update the chart series with the new data
         this.series[0].data = data
+        // Update the color scale ranges to match the new data
+        //This will display albums that had low popularity (based on the number of fans) (less than half of the number of fans of their top album) in red.
         this.chartOptions.plotOptions.treemap.colorScale.ranges[0].to = Math.ceil(maxFans / 2)
         this.chartOptions.plotOptions.treemap.colorScale.ranges[1].from = Math.ceil(maxFans / 2)
         this.chartOptions.plotOptions.treemap.colorScale.ranges[1].to = maxFans
@@ -37,7 +51,7 @@ export default {
           type: 'treemap'
         },
         title: {
-          text: 'Popularité des albums en nombre de fan',
+          text: 'Popularity of albums based on the number of fans',
           align: 'center'
         },
         dataLabels: {
@@ -66,16 +80,3 @@ export default {
   }
 }
 </script>
-
-<template>
-  <div id="chart">
-    <apexchart
-      height="350"
-      :options="chartOptions"
-      :series="series"
-      v-if="chartOptions.plotOptions.treemap.colorScale.ranges[1].to"
-    ></apexchart>
-  </div>
-</template>
-
-<style></style>

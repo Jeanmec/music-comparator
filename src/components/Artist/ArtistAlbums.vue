@@ -1,11 +1,6 @@
 <script>
 export default {
-  props: ['artist'],
-  data: () => {
-    return {
-      albumsPaginationLimit: 5
-    }
-  }
+  props: ['artist']
 }
 </script>
 

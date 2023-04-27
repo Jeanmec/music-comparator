@@ -1,9 +1,6 @@
 <script>
 export default {
-  props: ['tracks'],
-  data: () => {
-    return {}
-  }
+  props: ['tracks']
 }
 </script>
 

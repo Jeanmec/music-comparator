@@ -38,8 +38,6 @@ export default {
     this.artist.top_tracks = await getArtistTopTracks(this.artist.id)
     // Albums de l'artiste (pagination)
     this.artist.albums = await getArtistAlbums(this.artist.id, this.albums_pagination_index)
-
-    console.log(this.artist)
   }
 }
 </script>

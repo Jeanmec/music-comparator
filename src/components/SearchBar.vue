@@ -1,5 +1,8 @@
 <template>
-  <div class="w-6/12 mx-auto my-4">
+  <div class="w-6/12 mx-auto my-8">
+    <h2 class="my-4 text-center text-2xl font-semibold">
+      Search for and compare your favorite artists
+    </h2>
     <div class="relative">
       <input
         type="search"
@@ -17,6 +20,7 @@
         Search <Magnify />
       </button>
     </div>
+    <span v-if="error" class="text-red-500">{{ error }}</span>
   </div>
 </template>
 
@@ -25,6 +29,7 @@ import { Magnify } from 'mdue'
 
 export default {
   components: { Magnify },
+  props: ['error'],
   data() {
     return {
       query: ''
@@ -34,6 +39,7 @@ export default {
     async search() {
       if (this.query) {
         this.$emit('searchArtist', this.query)
+        this.query = ''
       }
     }
   }
