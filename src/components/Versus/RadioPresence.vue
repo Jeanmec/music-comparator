@@ -5,7 +5,7 @@
       :key="index"
       class="flex flex-col items-center gap-y-4 w-1/2"
     >
-      <div class="text-3xl font-bold text-gray-900 dark:text-white flex flex-col items-center">
+      <div class="text-3xl font-bold text-gray-900 flex flex-col items-center">
         <span class="flex" :class="compareRadio(artist) ? 'bg-green-200 py-2 px-4 rounded-3xl' : ''"
           ><RadioTower /> Radio</span
         >

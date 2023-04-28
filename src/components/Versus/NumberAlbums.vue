@@ -9,7 +9,7 @@
     >
       <!-- Display the number of albums for the current artist -->
       <span
-        class="text-3xl font-medium text-gray-900 dark:text-white"
+        class="text-3xl font-medium text-gray-900"
         :class="{ 'bg-green-200 py-2 px-4 rounded-3xl': isHighest(artist.data.nb_album) }"
         >{{ artist.data.nb_album }} album(s)</span
       >
