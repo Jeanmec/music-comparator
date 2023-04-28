@@ -10,7 +10,7 @@
   <div class="flex items-center justify-center">
     <button
       type="button"
-      class="text-white border-4 border-green-300 bg-green-500 hover:bg-green-600 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700"
+      class="text-white border-4 border-green-300 bg-green-500 hover:bg-green-600 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2"
     >
       <span @click="gotoComparator" class="text-1xl flex items-center gap-x-1 text-xl"
         >Go to comparator <CompareHorizontal class="text-2xl"
